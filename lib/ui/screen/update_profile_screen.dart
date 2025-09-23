@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/ui/widgets/t_m_app_bar.dart';
@@ -172,7 +171,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     );
   }
 
-  //-----------------Image picker ---------------
+  //-----------------Image picker -------------------------
   Future<void> _getImage() async {
     final XFile? imageFile = await _imagePick.pickImage(
       source: ImageSource.gallery,
@@ -184,7 +183,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-  //----------------Dispose all Controller ---------------
+  //----------------Dispose all Controller -----------------
   @override
   void dispose() {
     _emailUpdateController.dispose();

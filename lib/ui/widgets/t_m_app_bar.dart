@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/routes/app_routes.dart';
+import 'package:task_manager_app/ui/widgets/show_custom_alert_dialog.dart';
 
 class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool? isUpdateProfileScreen;
@@ -58,10 +59,14 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
 
       actions: [
+        SizedBox(),
         IconButton(
-          onPressed: () {},
+          onPressed: (){
+            showCustomAlertDialog(context);
+          },
           icon: Icon(Icons.logout, color: Colors.white),
         ),
+
       ],
     );
   }
