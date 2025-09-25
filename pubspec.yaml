@@ -17,6 +17,9 @@ dependencies:
   pin_code_fields: ^8.0.1
   #this package for image pick
   image_picker: ^1.2.0
+  logger: ^2.6.1
+  http: ^1.5.0
+
 
 
 dev_dependencies:
