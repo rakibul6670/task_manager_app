@@ -1,7 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/data/models/user_data_model.dart';
+import 'package:task_manager_app/data/services/api_caller.dart';
+import 'package:task_manager_app/data/utils/urls.dart';
+import 'package:task_manager_app/ui/controllers/auth_controllers.dart';
+import 'package:task_manager_app/ui/utils/validator.dart';
+import 'package:task_manager_app/ui/widgets/loading_progress_indicator.dart';
+import 'package:task_manager_app/ui/widgets/password_form_field.dart';
 import 'package:task_manager_app/ui/widgets/screen_background.dart';
 import '../../../routes/app_routes.dart';
+import '../../widgets/show_snack_bar_message.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   //----------------------- Text Editing Controller ---------
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
+
+  bool loginProgressIndicator = false;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   //---------------Email Field ------------
                   TextFormField(
-                    // validator: ,
+      
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: Validator.validateEmail,
                     textInputAction: TextInputAction.next,
                     controller: _emailTEController,
                     decoration: InputDecoration(
@@ -53,22 +65,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 10),
 
                   //--------------Password Field-----------------
-                  TextFormField(
-                    // validator: ,
-                    textInputAction: TextInputAction.next,
-                    controller: _passwordTEController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                  ),
+                  PasswordFormField(passwordController: _passwordTEController),
 
                   //-----------------------Login button ----------
                   SizedBox(height: 15),
-                  FilledButton(
-                    onPressed: _onTapLoginButton,
-                    child: Icon(Icons.arrow_circle_right_outlined, size: 30),
+                  Visibility(
+                    visible: loginProgressIndicator == false,
+                    replacement: LoadingProgressIndicator(),
+                    child: FilledButton(
+                      onPressed: _onTapLoginButton,
+                      child: Icon(Icons.arrow_circle_right_outlined, size: 30),
+                    ),
                   ),
 
                   Center(
@@ -120,20 +127,55 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //------------------Got To DashboardScreen --------------
   void _onTapLoginButton() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRoutes.dashboard,
-      (predicate) => false,
-    );
+    if (_formKey.currentState!.validate()) {
+      _login();
+    }
   }
 
-  //---------------Forgot Button------------------------------
+  //============================Login then go to dashboard ====================
+  Future<void> _login() async {
+    loginProgressIndicator = true;
+    setState(() {});
+
+    Map<String, dynamic> responseBody = {
+      "email": _emailTEController.text.trim(),
+      "password": _passwordTEController.text,
+    };
+
+    final ApiResponse response = await ApiCaller.postRequest(
+      url: Urls.loginUrl,
+      requestBody: responseBody,
+    );
+    loginProgressIndicator = false;
+    setState(() {});
+
+    if (response.isSuccess && response.responseBody["status"] == "success") {
+      String token = response.responseBody["token"];
+
+      UserDataModel userDataModel = UserDataModel.fromJson(response.responseBody["data"]);
+
+      //---------------------Local storage e data store ----------------
+      await AuthControllers.saveUserData(token, userDataModel);
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.dashboard,
+        (predicate) => false,
+      );
+
+      ShowSnackBarMessage.successMessage(context, "Login Successful");
+    } else {
+      ShowSnackBarMessage.failedMessage(context, response.responseBody);
+    }
+  }
+
+  //---------------Forgot Button------------------------------------------------
   void _onTapForgotButton() {
-    //-------------------Go to forgot screen--------
+    //-------------------Go to forgot screen------
     Navigator.pushNamed(context, AppRoutes.forgotPassword);
   }
 
-  //---------------Signup Button-------------------------------
+  //---------------Signup Button-----------------------------------------------
   void _onTapSignUpButton() {
     //-------------------Go to SignUp screen--------
     Navigator.pushNamed(context, AppRoutes.signup);

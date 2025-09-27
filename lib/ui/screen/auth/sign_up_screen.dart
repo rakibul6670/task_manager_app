@@ -1,8 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/ui/screen/auth/login_screen.dart';
+import 'package:task_manager_app/data/services/api_caller.dart';
+import 'package:task_manager_app/ui/utils/validator.dart';
+import 'package:task_manager_app/ui/widgets/loading_progress_indicator.dart';
+import 'package:task_manager_app/ui/widgets/password_form_field.dart';
 import 'package:task_manager_app/ui/widgets/screen_background.dart';
+import 'package:task_manager_app/ui/widgets/show_snack_bar_message.dart';
 
+import '../../../data/utils/urls.dart';
 import '../../../routes/app_routes.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -22,6 +27,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _lastNameTEController = TextEditingController();
   final TextEditingController _mobileTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
+
+  bool _signupProgressIndication = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +53,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   //---------------Email Field ------------
                   TextFormField(
-                    // validator: ,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: Validator.validateEmail,
                     textInputAction: TextInputAction.next,
                     controller: _emailTEController,
                     decoration: InputDecoration(
@@ -59,7 +67,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   //---------------First Name  Field ------------
                   TextFormField(
-                    // validator: ,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: (value) =>
+                        Validator.validateName(value, fieldName: "First name"),
                     textInputAction: TextInputAction.next,
                     controller: _firstNameTEController,
                     decoration: InputDecoration(
@@ -71,7 +81,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 10),
                   //---------------Last Name Field ------------
                   TextFormField(
-                    // validator: ,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: (value) =>
+                        Validator.validateName(value, fieldName: "Last name"),
                     textInputAction: TextInputAction.next,
                     controller: _lastNameTEController,
                     decoration: InputDecoration(
@@ -83,6 +95,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 10),
                   //---------------Mobile Number Field ------------
                   TextFormField(
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: Validator.validatePhone,
                     controller: _mobileTEController,
                     decoration: InputDecoration(
                       hintText: "Enter your phone number",
@@ -93,22 +107,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 10),
 
                   //--------------Password Field-----------------
-                  TextFormField(
-                    // validator: ,
-                    textInputAction: TextInputAction.next,
-                    controller: _passwordTEController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: "Password",
-                      hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                  ),
+                  PasswordFormField(passwordController: _passwordTEController),
 
                   //-----------------------Login button ----------
                   SizedBox(height: 15),
-                  FilledButton(
-                    onPressed: _onTapNextScreen,
-                    child: Icon(Icons.arrow_circle_right_outlined, size: 30),
+                  Visibility(
+                    visible: _signupProgressIndication == false,
+                    replacement: LoadingProgressIndicator(),
+                    child: FilledButton(
+                      onPressed: _onTapNextScreen,
+                      child: Icon(Icons.arrow_circle_right_outlined, size: 30),
+                    ),
                   ),
 
                   SizedBox(height: 50),
@@ -144,12 +153,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   //---------------Signup Button----------------------------
   void _onTapNextScreen() {
+    if (_formKey.currentState!.validate()) {
+      signUp();
+    }
     // -------------------Go to Login screen--------
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRoutes.login,
-      (predicate) => false,
+    // Navigator.pushNamedAndRemoveUntil(
+    //   context,
+    //   AppRoutes.login,
+    //   (predicate) => false,
+    // );
+  }
+
+  //-------------------Sign up ----------------------------
+  Future<void> signUp() async {
+    //------------ when call this function then value true and show indicator---------
+    _signupProgressIndication = true;
+    setState(() {});
+
+    //-------------request body -----------
+    Map<String, dynamic> requestBody = {
+      "email": _emailTEController.text.trim(),
+      "firstName": _firstNameTEController.text.trim(),
+      "lastName": _lastNameTEController.text.trim(),
+      "mobile": _mobileTEController.text.trim(),
+      "password": _passwordTEController.text,
+    };
+
+    //--------------Request to server for signup -----------------
+    final ApiResponse response = await ApiCaller.postRequest(
+      url: Urls.signUpUrl,
+      requestBody: requestBody,
     );
+
+    //------------ when call this function then value false and off indicator---------
+    _signupProgressIndication = false;
+    setState(() {});
+
+    if (response.isSuccess && response.responseBody["status"] == "success") {
+      _clearControllerText();
+      ShowSnackBarMessage.successMessage(
+        context,
+        "Sign up successful .Please log in",
+      );
+    } else {
+      ShowSnackBarMessage.failedMessage(context, response.responseBody);
+    }
+  }
+
+  void _clearControllerText() {
+    _emailTEController.clear();
+    _firstNameTEController.clear();
+    _lastNameTEController.clear();
+    _mobileTEController.clear();
+    _passwordTEController.clear();
   }
 
   void _onTapLoginButton() {

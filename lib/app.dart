@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:task_manager_app/routes/app_pages.dart';
 import 'package:task_manager_app/routes/app_routes.dart';
 
-
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
 

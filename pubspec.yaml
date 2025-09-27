@@ -17,8 +17,12 @@ dependencies:
   pin_code_fields: ^8.0.1
   #this package for image pick
   image_picker: ^1.2.0
+  #-this package console data spacial vabe show korte---------
   logger: ^2.6.1
+  #------------this package for api call ------------
   http: ^1.5.0
+  #------------------this package for small data cache e store korte -------
+  shared_preferences: ^2.5.3
 
 
 

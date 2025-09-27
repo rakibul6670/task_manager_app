@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager_app/ui/screen/auth/forgot_password_verify_otp_screen.dart';
+import 'package:task_manager_app/ui/utils/validator.dart';
 import 'package:task_manager_app/ui/widgets/screen_background.dart';
 
 import '../../../routes/app_routes.dart';
@@ -52,7 +52,8 @@ class _ForgotPasswordVerifyEmailScreenState
 
                   //---------------Email Field ------------
                   TextFormField(
-                    // validator: ,
+                    autovalidateMode: AutovalidateMode.onUnfocus,
+                    validator: Validator.validateEmail,
                     textInputAction: TextInputAction.next,
                     controller: _emailTEController,
                     decoration: InputDecoration(

@@ -12,8 +12,6 @@ import 'package:task_manager_app/ui/screen/progress_task_screen.dart';
 import 'package:task_manager_app/ui/screen/update_profile_screen.dart';
 import '../ui/screen/auth/login_screen.dart';
 
-
-
 class AppPages {
   //---------------------All Pages list -----------
   static Map<String, Widget Function(BuildContext)> routes = {

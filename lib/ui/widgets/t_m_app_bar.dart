@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/routes/app_routes.dart';
+import 'package:task_manager_app/ui/controllers/auth_controllers.dart';
 import 'package:task_manager_app/ui/widgets/show_custom_alert_dialog.dart';
 
 class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -41,14 +42,14 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   //-------------------User Name ------------
                   Text(
-                    "Rakibul Hossain",
+                    AuthControllers.userModel?.fullName ??"Unknown",
                     style: textTheme.titleMedium!.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    "rakibulpb6670@gmail.com",
+                    AuthControllers.userModel?.email ?? "Unknown",
                     style: textTheme.bodySmall!.copyWith(color: Colors.white70),
                   ),
                 ],
@@ -61,12 +62,11 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         SizedBox(),
         IconButton(
-          onPressed: (){
+          onPressed: () {
             showCustomAlertDialog(context);
           },
           icon: Icon(Icons.logout, color: Colors.white),
         ),
-
       ],
     );
   }
