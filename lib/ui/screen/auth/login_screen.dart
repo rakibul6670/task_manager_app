@@ -51,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   //---------------Email Field ------------
                   TextFormField(
-      
                     autovalidateMode: AutovalidateMode.onUnfocus,
                     validator: Validator.validateEmail,
                     textInputAction: TextInputAction.next,
@@ -150,12 +149,14 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {});
 
     if (response.isSuccess && response.responseBody["status"] == "success") {
+
+      UserDataModel model = UserDataModel.fromJson(
+        response.responseBody["data"],
+      );
       String token = response.responseBody["token"];
 
-      UserDataModel userDataModel = UserDataModel.fromJson(response.responseBody["data"]);
-
       //---------------------Local storage e data store ----------------
-      await AuthControllers.saveUserData(token, userDataModel);
+      await AuthControllers.saveUserData(token, model);
 
       Navigator.pushNamedAndRemoveUntil(
         context,

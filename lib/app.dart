@@ -4,6 +4,13 @@ import 'package:task_manager_app/routes/app_routes.dart';
 
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
+  
+  /*
+  It creates a static GlobalKey for your app’s Navigator.
+   You can then use it to navigate without context, 
+   like in services, providers, or API callbacks.
+  */
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {

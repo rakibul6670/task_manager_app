@@ -3,23 +3,29 @@ import 'package:flutter/material.dart';
 class TaskCountByStatusCard extends StatelessWidget {
   final String title;
   final int count;
-  final int hexColor;
 
   const TaskCountByStatusCard({
     super.key,
     required this.title,
     required this.count,
-    required this.hexColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color(hexColor),
+      //-----------------------Card color -------------
+      color: title == "New"
+          ? Colors.blue
+          : title == "Completed"
+          ? Colors.green
+          : title == "Cancelled"
+          ? Colors.red
+          : Colors.purple,
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusGeometry.circular(7),
       ),
+
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
@@ -29,9 +35,13 @@ class TaskCountByStatusCard extends StatelessWidget {
           children: [
             Text(
               "$count",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Text(title, style: TextStyle(fontSize: 12)),
+            Text(title, style: TextStyle(color: Colors.white, fontSize: 12)),
           ],
         ),
       ),

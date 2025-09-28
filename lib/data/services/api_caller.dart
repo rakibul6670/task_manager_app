@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:task_manager_app/app.dart';
+import 'package:task_manager_app/routes/app_routes.dart';
 import 'package:task_manager_app/ui/controllers/auth_controllers.dart';
 
 class ApiCaller {
@@ -13,8 +16,6 @@ class ApiCaller {
 
       //----------- logger request ----------
       _logRequest(url);
-
-    
 
       final http.Response response = await http.get(
         uri,
@@ -30,6 +31,14 @@ class ApiCaller {
           isSuccess: true,
           statusCode: statusCode,
           responseBody: decodeData,
+        );
+      } else if (statusCode == 401) {
+        _moveToLogin();
+        return ApiResponse(
+          isSuccess: false,
+          statusCode: statusCode,
+          errorMessage: "Unauthorize",
+          responseBody: null,
         );
       } else {
         //--------FAILED----------------
@@ -50,7 +59,6 @@ class ApiCaller {
     }
   }
 
-
   //===================== POST Request =========================================
   static Future<ApiResponse> postRequest({
     required String url,
@@ -63,7 +71,6 @@ class ApiCaller {
       _logRequest(url);
 
       logger.i("Token : ${AuthControllers.accessToken}");
-     
 
       final http.Response response = await http.post(
         uri,
@@ -84,6 +91,14 @@ class ApiCaller {
           statusCode: statusCode,
           responseBody: decodeData,
         );
+      } else if (statusCode == 401) {
+        _moveToLogin();
+        return ApiResponse(
+          isSuccess: false,
+          statusCode: statusCode,
+          errorMessage: "Unauthorize",
+          responseBody: null,
+        );
       } else {
         //--------FAILED----------------
         final decodeData = jsonDecode(response.body);
@@ -103,7 +118,7 @@ class ApiCaller {
     }
   }
 
-  //--------------Logger Request ---------------
+  //=========== Logger Request ================
   static void _logRequest(String url, {dynamic requestBody}) {
     logger.i(
       "Request Url: $url \n"
@@ -111,7 +126,7 @@ class ApiCaller {
     );
   }
 
-  //--------------Logger Response ---------------
+  //=========== Logger Response ==============
   static void _logResponse(String url, http.Response response) {
     logger.i(
       "Request Url: $url \n "
@@ -119,9 +134,20 @@ class ApiCaller {
       "RequestBody : ${response.body} \n",
     );
   }
+
+  //====== is Unauthorize move to login screen ==========
+  static Future<void> _moveToLogin() async {
+    AuthControllers.clearUserData();
+
+    Navigator.pushNamedAndRemoveUntil(
+      TaskManagerApp.navigatorKey.currentState!.context,
+      AppRoutes.login,
+      (predicate) => false,
+    );
+  }
 }
 
-//====================this class handle response and error ==========================
+//====================this class handle response and error =====================
 class ApiResponse {
   final bool isSuccess;
   final int statusCode;
