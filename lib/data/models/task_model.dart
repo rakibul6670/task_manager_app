@@ -3,14 +3,14 @@ class TaskModel {
   final String title;
   final String description;
   final String status;
-  final String createDate;
+  final String createdDate;
 
   TaskModel({
     required this.id,
     required this.title,
     required this.description,
     required this.status,
-    required this.createDate,
+    required this.createdDate,
   });
 
   factory TaskModel.fromJson(Map<String, dynamic> jsonData) {
@@ -19,7 +19,7 @@ class TaskModel {
       title: jsonData["title"],
       description:jsonData["description"],
       status: jsonData["status"],
-      createDate:jsonData["createDate"],
+      createdDate:jsonData["createdDate"],
     );
   }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager_app/routes/app_routes.dart';
 import 'package:task_manager_app/ui/controllers/auth_controllers.dart';
 
-Future showCustomAlertDialog(context) async {
+Future showLogOutDialog(context) async {
   return showDialog(
     barrierDismissible: false,
     useSafeArea: true,

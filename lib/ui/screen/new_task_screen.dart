@@ -21,7 +21,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   void initState() {
     super.initState();
     getTaskStatusCount();
-    _getNewTask();
+    _getAllNewTask();
   }
 
   //=========================Task status list ============
@@ -78,9 +78,9 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                     return TaskCard(
                       title: task.title,
                       subTitle: task.description,
-                      date: task.createDate,
+                      date: task.createdDate.substring(0,10),
                       deleteTask: () {},
-                      editTask: () {},
+                    
                       taskStatus: task.status,
                     );
                   },
@@ -128,14 +128,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   //===================== Get New Task ========================================
-  Future<void> _getNewTask() async {
+  Future<void> _getAllNewTask() async {
     Logger logger = Logger();
     //=================== Task Loading progress show ========
     taskLoadingProgress = true;
     setState(() {});
 
     final ApiResponse response = await ApiCaller.getRequest(
-      url: Urls.taskByStatusUrl,
+      url: Urls.newTaskUrl,
     );
 
     logger.i("Task load: ${response.isSuccess}");
@@ -144,7 +144,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     taskLoadingProgress = false;
     setState(() {});
 
-    if (response.isSuccess && response.responseBody["status"] == "success") {
+    if (response.isSuccess  && response.responseBody["status"] == "success") {
       final dataList = response.responseBody["data"] as List<dynamic>;
 
       taskList = dataList.map((data) => TaskModel.fromJson(data)).toList();

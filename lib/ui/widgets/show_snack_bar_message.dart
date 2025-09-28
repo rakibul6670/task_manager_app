@@ -15,8 +15,7 @@ class ShowSnackBarMessage {
           ),)
         ],)),
         elevation: 4,
-        duration: Duration(seconds: 3),
-
+        duration: Duration(seconds: 2),
       ),
     );
   }
