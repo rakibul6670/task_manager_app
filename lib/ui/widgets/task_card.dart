@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/data/services/api_caller.dart';
 import 'package:task_manager_app/data/utils/urls.dart';
-import 'package:task_manager_app/ui/widgets/show_change_status_dialog.dart';
+import 'package:task_manager_app/ui/widgets/loading_progress_indicator.dart';
+import 'package:task_manager_app/ui/widgets/show_snack_bar_message.dart';
 
 class TaskCard extends StatefulWidget {
+  final String id;
   final String title;
   final String subTitle;
   final String date;
-  final VoidCallback deleteTask;
-  final VoidCallback? editTask;
+
   final String taskStatus;
 
   const TaskCard({
@@ -16,9 +17,8 @@ class TaskCard extends StatefulWidget {
     required this.title,
     required this.subTitle,
     required this.date,
-    required this.deleteTask,
-    this.editTask,
     required this.taskStatus,
+    required this.id,
   });
 
   @override
@@ -61,16 +61,20 @@ class _TaskCardState extends State<TaskCard> {
                 Spacer(),
 
                 //-------------------Edit Button For Task Edit  ---------------
-                IconButton(
-                  onPressed:
-                      widget.editTask ??
-                      () => changeStatusDialog(context, widget.taskStatus),
-                  icon: Icon(Icons.edit, color: Colors.green),
+                Visibility(
+                  visible: statusChangeProgress == false,
+                  replacement: LoadingProgressIndicator(),
+                  child: IconButton(
+                    onPressed:
+
+                        () => changeStatusDialog(context, widget.taskStatus),
+                    icon: Icon(Icons.edit, color: Colors.green),
+                  ),
                 ),
 
                 //----------------------Delete Button For Task Delete ------------
                 IconButton(
-                  onPressed: widget.deleteTask,
+                  onPressed: (){},
                   icon: Icon(Icons.delete, color: Colors.red),
                 ),
               ],
@@ -81,14 +85,108 @@ class _TaskCardState extends State<TaskCard> {
     );
   }
 
-  //============================== Change Task Status ================================
-  Future<void> _changeStatus(String taskStatus) async {
+
+  //====================== Status change dialog=================================
+
+ Future<void> changeStatusDialog(context, String taskStatus) async {
+   return showDialog(
+     barrierDismissible: false,
+     useSafeArea: true,
+     context: context,
+     builder: (context) {
+       return AlertDialog(
+         title: Text("Update Task Status"),
+         elevation: 4,
+         content: Column(
+           mainAxisSize: MainAxisSize.min,
+           children: [
+             //---------------------New status--------
+             ListTile(
+               onTap: () {
+                 changeStatus("New");
+
+               },
+               title: Text("New"),
+               trailing: taskStatus == "New"
+                   ? Icon(Icons.check, color: Colors.green)
+                   : null,
+             ),
+
+             //---------------------Progress status--------
+             ListTile(
+               onTap: () {
+                 changeStatus("Progress");
+                 setState(() {
+
+                 });
+               },
+               title: Text("Progress"),
+               trailing: taskStatus == "Progress"
+                   ? Icon(Icons.check, color: Colors.green)
+                   : null,
+             ),
+
+             //---------------------Completed status--------
+             ListTile(
+               onTap: () {
+                 changeStatus("Completed");
+               },
+               title: Text("Completed"),
+               trailing: taskStatus == "Completed"
+                   ? Icon(Icons.check, color: Colors.green)
+                   : null,
+             ),
+
+             //---------------------Progress status--------
+             ListTile(
+               onTap: () {
+                 changeStatus("Cancelled");
+               },
+               title: Text("Cancelled"),
+               trailing: taskStatus == "Cancelled"
+                   ? Icon(Icons.check, color: Colors.green)
+                   : null,
+             ),
+           ],
+         ),
+         actionsAlignment: MainAxisAlignment.center,
+
+       );
+     },
+   );
+ }
+
+
+ //============================== Change Task Status ================================
+  Future<void> changeStatus(String taskStatus) async {
+
+    if(taskStatus == widget.taskStatus){
+      Navigator.pop(context);
+      return ;
+    }
+
+    //==================== status change progress show===
     statusChangeProgress = true;
     setState(() {});
 
-    // final ApiResponse response = await ApiCaller.getRequest(
-    //   url: Urls.updateTaskStatusUrl(id, newStatus),
-    // );
+    final ApiResponse response = await ApiCaller.getRequest(
+      url: Urls.updateTaskStatusUrl(widget.id, taskStatus),
+    );
+
+    //==================== status change progress show
+    statusChangeProgress = false;
+    setState(() {});
+
+
+    if(response.isSuccess && response.statusCode == 200){
+      ShowSnackBarMessage.successMessage(context, "Status change successful");
+      Navigator.pop(context);
+    }
+    else{
+      ShowSnackBarMessage.failedMessage(context, "Status change failed");
+    }
+
+
 
 
   }

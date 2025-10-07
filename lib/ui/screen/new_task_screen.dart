@@ -37,57 +37,66 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          spacing: 15,
-          children: [
-            //-------------------Task Count Section -------------
-            SizedBox(
-              height: 90,
-              child: Visibility(
-                visible: taskStatusCountProgress == false,
-                replacement: LoadingProgressIndicator(),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    final count = taskStatusList[index];
-                    return TaskCountByStatusCard(
-                      title: count.id,
-                      count: count.sum,
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(width: 4);
-                  },
-                  itemCount: taskStatusList.length,
+
+
+      body: RefreshIndicator(
+        onRefresh: () async{
+          getTaskStatusCount();
+          _getAllNewTask();
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            spacing: 15,
+            children: [
+              //-------------------Task Count Section -------------
+              SizedBox(
+                height: 90,
+                child: Visibility(
+                  visible: taskStatusCountProgress == false,
+                  replacement: LoadingProgressIndicator(),
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      final count = taskStatusList[index];
+                      return TaskCountByStatusCard(
+                        title: count.id,
+                        count: count.sum,
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(width: 4);
+                    },
+                    itemCount: taskStatusList.length,
+                  ),
                 ),
               ),
-            ),
 
-            //----------------ListTile card ---------------
-            Expanded(
-              child: Visibility(
-                visible: taskLoadingProgress == false,
-                replacement: LoadingProgressIndicator(),
-                child: ListView.builder(
-                  itemCount: taskList.length,
-                  itemBuilder: (context, index) {
-                    final task = taskList[index];
+              //----------------ListTile card ---------------
+              Expanded(
+                child: Visibility(
+                  visible: taskLoadingProgress == false,
+                  replacement: LoadingProgressIndicator(),
+                  child: taskList.isEmpty? Center(child: Text("No Task Found !")): ListView.builder(
+                    itemCount: taskList.length,
+                    itemBuilder: (context, index) {
+                      final task = taskList[index];
 
-                    return TaskCard(
-                      title: task.title,
-                      subTitle: task.description,
-                      date: task.createdDate.substring(0,10),
-                      deleteTask: () {},
-                    
-                      taskStatus: task.status,
-                    );
-                  },
+                      return TaskCard(
+                        title: task.title,
+                        subTitle: task.description,
+                        date: task.createdDate.substring(0,10),
+
+
+                        taskStatus: task.status,
+                        id: task.id,
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -108,6 +117,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     setState(() {});
 
     if (response.isSuccess && response.responseBody["status"] == "success") {
+
       final dataList = response.responseBody["data"] as List<dynamic>;
 
       //--------------taskStatuslist e data add----------
@@ -117,7 +127,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
       ShowSnackBarMessage.successMessage(
         context,
-        "Successfuly task status count data loaded",
+        "Successfully task status count data loaded",
       );
     } else {
       ShowSnackBarMessage.failedMessage(
