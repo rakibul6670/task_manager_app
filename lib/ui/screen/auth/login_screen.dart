@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:task_manager_app/data/models/user_data_model.dart';
 import 'package:task_manager_app/data/services/api_caller.dart';
 import 'package:task_manager_app/data/utils/urls.dart';
@@ -157,7 +158,11 @@ class _LoginScreenState extends State<LoginScreen> {
       String token = response.responseBody["token"];
 
       //---------------------Local storage e data store ----------------
+
       await AuthControllers.saveUserData(token, model);
+
+      Logger logger = Logger();
+      logger.i("User Data Model : $model");
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -183,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pushNamed(context, AppRoutes.signup);
   }
 
-  //------------------------Dispose all Controller --------------
+  //------------------------Dispose all Controller ----------------------------
   @override
   void dispose() {
     _emailTEController.dispose();

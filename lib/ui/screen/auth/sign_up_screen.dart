@@ -156,12 +156,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (_formKey.currentState!.validate()) {
       signUp();
     }
-    // -------------------Go to Login screen--------
-    // Navigator.pushNamedAndRemoveUntil(
-    //   context,
-    //   AppRoutes.login,
-    //   (predicate) => false,
-    // );
   }
 
   //-------------------Sign up ----------------------------

@@ -14,4 +14,6 @@ class Urls {
 
   static String completedTaskSUrl = "$_baseUrl/listTaskByStatus/Completed";
   static String cancelledTasksUrl = "$_baseUrl/listTaskByStatus/Cancelled";
+
+  static String deleteTaskUrl(String id) => "$_baseUrl/deleteTask/$id";
 }

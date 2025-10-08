@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:task_manager_app/routes/app_routes.dart';
 import 'package:task_manager_app/ui/controllers/auth_controllers.dart';
 import 'package:task_manager_app/ui/widgets/show_log_out_dialog.dart';
@@ -10,6 +11,14 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    Logger logger = Logger();
+   //  AuthControllers.getUserData();
+
+    //==========
+    logger.i("First Name :${AuthControllers.userModel?.firstName}");
+    logger.i(" Last Name : ${AuthControllers.userModel?.lastName}");
+    logger.i("Email ${AuthControllers.userModel?.email}");
+
     //----------------------Got to Profile screen -------------
     void onTapProfileButton() {
       if (isUpdateProfileScreen == true) {
@@ -42,6 +51,7 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   //-------------------User Name ------------
                   Text(
+                    // AuthControllers.userModel?.firstName ?? "Unknown",
                     AuthControllers.userModel?.fullName ??"Unknown",
                     style: textTheme.titleMedium!.copyWith(
                       color: Colors.white,

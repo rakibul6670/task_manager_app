@@ -30,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       
       if (isLogged) {
         // -------------------Go to Login screen--------
+      //await AuthControllers.getUserData();
         Navigator.pushNamedAndRemoveUntil(
           (context),
           AppRoutes.dashboard,

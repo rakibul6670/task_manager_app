@@ -41,8 +41,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
 
       body: RefreshIndicator(
         onRefresh: () async{
-          getTaskStatusCount();
-          _getAllNewTask();
+          await getTaskStatusCount();
+          await _getAllNewTask();
         },
         child: Padding(
           padding: const EdgeInsets.all(12.0),

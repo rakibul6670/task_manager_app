@@ -28,6 +28,8 @@ class TaskCard extends StatefulWidget {
 class _TaskCardState extends State<TaskCard> {
   //==================== Status change progress =======================
   bool statusChangeProgress = false;
+//======================= Delete Task Progress=====================
+ bool deleteTaskProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +75,15 @@ class _TaskCardState extends State<TaskCard> {
                 ),
 
                 //----------------------Delete Button For Task Delete ------------
-                IconButton(
-                  onPressed: (){},
-                  icon: Icon(Icons.delete, color: Colors.red),
+                Visibility(
+                  visible: deleteTaskProgress==false,
+                  replacement: LoadingProgressIndicator(),
+                  child: IconButton(
+                    onPressed: () async{
+                      await deleteTask(widget.id);
+                    },
+                    icon: Icon(Icons.delete, color: Colors.red),
+                  ),
                 ),
               ],
             ),
@@ -184,6 +192,37 @@ class _TaskCardState extends State<TaskCard> {
     }
     else{
       ShowSnackBarMessage.failedMessage(context, "Status change failed");
+    }
+
+
+
+
+  }
+
+
+  //============================== Delete Task ================================
+  Future<void> deleteTask(String id) async {
+
+
+    //==================== status change progress show===
+    deleteTaskProgress = true;
+    setState(() {});
+
+    final ApiResponse response = await ApiCaller.getRequest(
+      url: Urls.deleteTaskUrl(id),
+    );
+
+    //==================== status change progress show
+    deleteTaskProgress = false;
+    setState(() {});
+
+
+    if(response.isSuccess && response.statusCode == 200){
+      ShowSnackBarMessage.successMessage(context, "task delete successful");
+
+    }
+    else{
+      ShowSnackBarMessage.failedMessage(context, "task delete failed");
     }
 
 

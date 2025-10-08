@@ -49,12 +49,19 @@ class AuthControllers {
   static Future<void> getUserData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = sharedPreferences.getString(accessTokenKey);
+    String? user = sharedPreferences.getString(_userModelKey);
 
     if (token != null) {
       accessToken = token;
-
-      String user = sharedPreferences.getString(_userModelKey)!;
-      userModel = jsonDecode(user);
+      //
+      // String user = sharedPreferences.getString(_userModelKey)!;
+      // userModel = UserDataModel.fromJson(jsonDecode(user));
+      if (user != null) {
+        userModel = UserDataModel.fromJson(jsonDecode(user));
+        Logger().i("User data loaded: ${userModel?.firstName}");
+      } else {
+        Logger().w("⚠️ No user data found in SharedPreferences");
+      }
     }
   }
 
