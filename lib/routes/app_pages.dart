@@ -20,7 +20,7 @@ class AppPages {
     AppRoutes.login: (context) => LoginScreen(),
     AppRoutes.signup: (context) => SignUpScreen(),
     AppRoutes.forgotPassword: (context) => ForgotPasswordVerifyEmailScreen(),
-    AppRoutes.forgotPasswordOtp: (context) => ForgotPasswordVerifyOtpScreen(),
+   // AppRoutes.forgotPasswordOtp: (context) => ForgotPasswordVerifyOtpScreen(),
 
     //----------------------Navigation bar screen --------------
     AppRoutes.dashboard: (context) => MainNavBarHolderScreen(),
