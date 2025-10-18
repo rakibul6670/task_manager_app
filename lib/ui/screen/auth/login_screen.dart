@@ -24,8 +24,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   //----------------------- Text Editing Controller ---------
-  final TextEditingController _emailTEController = TextEditingController();
-  final TextEditingController _passwordTEController = TextEditingController();
+  late TextEditingController _emailTEController;
+  late TextEditingController _passwordTEController ;
+
+  @override
+  void initState(){
+    super.initState();
+    _emailTEController = TextEditingController();
+    _passwordTEController  = TextEditingController();
+
+  }
 
   bool loginProgressIndicator = false;
 

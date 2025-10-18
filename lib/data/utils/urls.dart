@@ -5,7 +5,7 @@ class Urls {
   static final String loginUrl = "$_baseUrl/Login";
 
   static  String emailVerifyUrl(email) => "$_baseUrl/RecoverVerifyEmail/$email";
-  static  String emailOTPUrl(email,int otp) => "$_baseUrl/RecoverVerifyOtp/$email/$otp";
+  static  String emailOTPUrl(String email,int otp) => "$_baseUrl/RecoverVerifyOtp/$email/$otp";
 
 
 

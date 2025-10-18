@@ -10,9 +10,10 @@ import '../../../data/utils/urls.dart';
 import '../../widgets/show_snack_bar_message.dart';
 
 class ForgotPasswordVerifyOtpScreen extends StatefulWidget {
-  final String email;
 
-  const ForgotPasswordVerifyOtpScreen({super.key, required this.email});
+  final String email;
+  const ForgotPasswordVerifyOtpScreen({super.key, required this.email,});
+
 
   @override
   State<ForgotPasswordVerifyOtpScreen> createState() =>
@@ -25,10 +26,16 @@ class _ForgotPasswordVerifyOtpScreenState
   final _formKey = GlobalKey<FormState>();
 
   //---------------otp controller -----------------------------
-  final TextEditingController _otpController = TextEditingController();
+  late TextEditingController _otpController ;
 
   //----------------------- OTP verify progress ----------
   bool otpVerifyProgress = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _otpController  = TextEditingController();
+  }
 
   //-----------------Dispose controller -------------
   @override
@@ -37,10 +44,14 @@ class _ForgotPasswordVerifyOtpScreenState
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-
+    //final args = ModalRoute.of(context)!.settings.arguments as Map;
+    //final email = args["email"];
+    print(widget.email);
     return Scaffold(
       //==========================Body Section =======================
       body: ScreenBackground(
@@ -110,7 +121,11 @@ class _ForgotPasswordVerifyOtpScreenState
                     visible: otpVerifyProgress == false,
                     replacement: LoadingProgressIndicator(),
                     child: FilledButton(
-                      onPressed: _onTapVerifyButton,
+                      onPressed:() async{
+                        if (_formKey.currentState!.validate()) {
+                          await _otpVerify(widget.email);
+                        }
+                      },
                       child: Text(
                         "Verify",
                         style: TextStyle(color: Colors.white, fontSize: 20),
@@ -149,32 +164,80 @@ class _ForgotPasswordVerifyOtpScreenState
     );
   }
 
-  //------------------------  otp verify and go to otp screen ------
-  Future<void> _otpVerify() async {
+  //=============================  otp verify and go to otp screen ==========================
+  // Future<void> _otpVerify(String email) async {
+  //   if (!mounted) return;
+  //
+  //   setState(() => otpVerifyProgress = true);
+  //
+  //   // --------------controller value ------
+  //   final otpText = _otpController.text.trim();
+  //
+  //   // -
+  //
+  //   final response = await ApiCaller.getRequest(
+  //     url: Urls.emailOTPUrl(email, int.parse(otpText)),
+  //   );
+  //   //
+  //   // if (!mounted) return;
+  //   setState(() => otpVerifyProgress = false);
+  //
+  //   if (response.isSuccess && response.responseBody?["status"] == "success") {
+  //     // if (!mounted) return;
+  //     Navigator.pushNamedAndRemoveUntil(
+  //       context,
+  //       AppRoutes.login,
+  //           (predicate) => false,
+  //     );
+  //   } else {
+  //     // if (!mounted) return;
+  //     ShowSnackBarMessage.failedMessage(
+  //       context,
+  //       response.errorMessage.toString(),
+  //     );
+  //   }
+  // }
+
+  Future<void> _otpVerify(String email) async {
+    final int otp = int.parse(_otpController.text);
     //========================= Progress show =================
     otpVerifyProgress = true;
     setState(() {});
 
     final response = await ApiCaller.getRequest(
-      url: Urls.emailOTPUrl(widget.email, int.parse(_otpController.text)),
+      url: Urls.emailOTPUrl(widget.email, otp),
     );
 
-    //========================= Progress off =================
-    if(mounted){
-      otpVerifyProgress = false;
-      setState(() {});
-    }
+    // //========================= Progress off =================
+    // otpVerifyProgress = false;
+    // setState(() {});
+
+    // if(mounted){
+    //   otpVerifyProgress = false;
+    //   setState(() {});
+    // }
 
     if (response.isSuccess && response.responseBody["status"] == "success") {
-      if(mounted){
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          AppRoutes.login,
-              (predicate) => false,
-        );
-      }
+
+      //========================= Progress off =================
+      otpVerifyProgress = false;
+      setState(() {});
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.login,
+            (predicate) => false,
+      );
+      // if(mounted){
+      //
+      // }
 
     } else {
+
+      //========================= Progress off =================
+      otpVerifyProgress = false;
+      setState(() {});
+
       ShowSnackBarMessage.failedMessage(
         context,
         response.errorMessage.toString(),
@@ -183,13 +246,11 @@ class _ForgotPasswordVerifyOtpScreenState
   }
 
   //------------------Verify Function-----------------
-  void _onTapVerifyButton() {
-    if (_formKey.currentState!.validate()) {
-      _otpVerify();
-    }
-  }
+  // void _onTapVerifyButton() {
+  //
+  // }
 
-  //--------------Sign up screen navigate function -----
+ // --------------Sign up screen navigate function -----
   void _onTapSignUpButton(BuildContext context) {
     Navigator.pushNamedAndRemoveUntil(
       context,
@@ -197,4 +258,8 @@ class _ForgotPasswordVerifyOtpScreenState
       (predicate) => false,
     );
   }
+
+
+
+
 }

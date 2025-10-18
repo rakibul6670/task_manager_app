@@ -2,12 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager_app/data/services/api_caller.dart';
 import 'package:task_manager_app/data/utils/urls.dart';
+import 'package:task_manager_app/routes/app_routes.dart';
 import 'package:task_manager_app/ui/screen/auth/forgot_password_verify_otp_screen.dart';
 import 'package:task_manager_app/ui/utils/validator.dart';
 import 'package:task_manager_app/ui/widgets/loading_progress_indicator.dart';
 import 'package:task_manager_app/ui/widgets/screen_background.dart';
 import 'package:task_manager_app/ui/widgets/show_snack_bar_message.dart';
-import '../../../routes/app_routes.dart';
 
 class ForgotPasswordVerifyEmailScreen extends StatefulWidget {
   const ForgotPasswordVerifyEmailScreen({super.key});
@@ -23,10 +23,19 @@ class _ForgotPasswordVerifyEmailScreenState
   final _formKey = GlobalKey<FormState>();
 
   //----------------------- Text Editing Controller ---------
-  final TextEditingController _emailTEController = TextEditingController();
+  //final TextEditingController _emailTEController = TextEditingController();
+   final TextEditingController _emailTEController = TextEditingController();
+
+  late String email;
 
   //----------------- email verify progress ----------------
   bool emailVerifyProgress = false;
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _emailTEController = TextEditingController();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,56 +121,88 @@ class _ForgotPasswordVerifyEmailScreenState
     );
   }
 
-  //--------------------Next screen with verify email ---------------------
+  //============================ Next screen with verify email =========================
   void _onTapNextButton() {
     if (_formKey.currentState!.validate()) {
-      _emailVerify();
+      email = _emailTEController.text;
+
+       _emailVerify();
     }
   }
 
-  //------------------------ Email verify and go to otp screen ------
+  //========================== Email verify and go to otp screen =========================
   Future<void> _emailVerify() async {
-    //========================= Progress show =================
+    //----------- Progress indicator show ----------
     emailVerifyProgress = true;
     setState(() {});
 
-    final response = await ApiCaller.getRequest(
-      url: Urls.emailVerifyUrl(_emailTEController.text.trim()),
+    final ApiResponse response = await ApiCaller.getRequest(
+      url: Urls.emailVerifyUrl(email),
     );
 
-    if(mounted){
-      //========================= Progress off =================
-      emailVerifyProgress = false;
-      setState(() {});
-    }
+    //-------------------- Progress indicator show ----------
+    emailVerifyProgress = false;
+    setState(() {});
 
     if (response.isSuccess && response.responseBody["status"] == "success") {
-
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => ForgotPasswordVerifyOtpScreen(
-            email: _emailTEController.text.trim(),
-          ),
+          builder: (context) => ForgotPasswordVerifyOtpScreen(email: email,),
         ),
         (predicate) => false,
       );
     } else {
-      if(mounted){
-        ShowSnackBarMessage.failedMessage(
-          context,
-          "Email not found. Please try again.",
-        );
-      }
+      ShowSnackBarMessage.failedMessage(
+        context,
+        response.errorMessage.toString(),
+      );
     }
   }
 
+  // Future<void> _emailVerify() async {
+  //   // if (!mounted) return;
+  //
+  //   setState(() => emailVerifyProgress = true);
+  //
+  //   final emailText = _emailTEController.text.trim();
+  //
+  //   final response = await ApiCaller.getRequest(
+  //     url: Urls.emailVerifyUrl(emailText),
+  //   );
+  //   //
+  //   // if (!mounted) return;
+  //    setState(() => emailVerifyProgress = false);
+  //
+  //   if (response.isSuccess && response.responseBody?["status"] == "success") {
+  //     Navigator.pushNamedAndRemoveUntil(context, AppRoutes.forgotPasswordOtp,arguments: {
+  //       "email": email,
+  //     }, (predicate)=> false);
+  //
+  //     // Navigator.pushAndRemoveUntil(
+  //     //   context,
+  //     //   MaterialPageRoute(
+  //     //     builder: (context) => ForgotPasswordVerifyOtpScreen(),
+  //     //   ),
+  //     //       (predicate) => false,
+  //     // );
+  //
+  //   } else {
+  //     // if (!mounted) return;
+  //     ShowSnackBarMessage.failedMessage(
+  //       context,
+  //       "Email not found. Please try again.",
+  //     );
+  //   }
+  // }
+
   //------------------Back to Login screen ----------
+  //========================== Sign in button =====================================
   void _onTapSignInButton() {
     Navigator.pop(context);
   }
 
-  //------------------------Dispose all Controller --------------
+  //================================= Dispose all Controller ======================
   @override
   void dispose() {
     _emailTEController.dispose();

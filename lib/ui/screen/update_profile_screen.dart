@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/data/models/user_data_model.dart';
+import 'package:task_manager_app/ui/controllers/auth_controllers.dart';
 import 'package:task_manager_app/ui/widgets/t_m_app_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -27,6 +29,16 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   //-------------------Image picked instance -----------
   final ImagePicker _imagePick = ImagePicker();
   String _imagePath = "No Selected Image";
+
+
+  //----------------------- init state ----------
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    UserDataModel model = AuthControllers.userModel!;
+    // _emailUpdateController.text
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +181,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         ),
       ),
     );
+  }
+  //==================== Profile update ===================
+  Future<void> _profileUpdate() async{
+
   }
 
   //-----------------Image picker -------------------------
