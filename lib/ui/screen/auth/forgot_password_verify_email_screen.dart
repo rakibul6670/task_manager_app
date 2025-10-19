@@ -24,18 +24,19 @@ class _ForgotPasswordVerifyEmailScreenState
 
   //----------------------- Text Editing Controller ---------
   //final TextEditingController _emailTEController = TextEditingController();
-   final TextEditingController _emailTEController = TextEditingController();
+   late TextEditingController _emailTEController;
+   //= TextEditingController();
 
   late String email;
 
   //----------------- email verify progress ----------------
   bool emailVerifyProgress = false;
   //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _emailTEController = TextEditingController();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _emailTEController = TextEditingController();
+  }
 
   @override
   Widget build(BuildContext context) {
