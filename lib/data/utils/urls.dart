@@ -3,10 +3,11 @@ class Urls {
 
   static final String signUpUrl = "$_baseUrl/Registration";
   static final String loginUrl = "$_baseUrl/Login";
+  static final String recoverResetPassword = "$_baseUrl/RecoverResetPassword";
 
   static  String emailVerifyUrl(email) => "$_baseUrl/RecoverVerifyEmail/$email";
   static  String emailOTPUrl(String email,int otp) => "$_baseUrl/RecoverVerifyOtp/$email/$otp";
-
+  static String updateProfile = "$_baseUrl/ProfileUpdate";
 
 
   static final String createTaskUrl = "$_baseUrl/CreateTask";

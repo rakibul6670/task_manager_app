@@ -72,6 +72,25 @@ class AuthControllers {
     return token != null;
   }
 
+  //============================== update Data ==================
+  static Future<void> updateProfileData(
+      UserDataModel userDataModel,
+      ) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    await sharedPreferences.setString(
+      _userModelKey,
+      jsonEncode(
+        userDataModel.toJson(),
+      ), //-----string er modhhe object rakhar jonno seta ke toJson(map) kore aber string korchi
+    );
+
+    userModel = userDataModel;
+    final Logger logger = Logger();
+    logger.i("profile update success : ");
+  }
+
+
   static Future<void> clearUserData() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();

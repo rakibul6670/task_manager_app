@@ -15,9 +15,9 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
    //  AuthControllers.getUserData();
 
     //==========
-    logger.i("First Name :${AuthControllers.userModel?.firstName}");
-    logger.i(" Last Name : ${AuthControllers.userModel?.lastName}");
-    logger.i("Email ${AuthControllers.userModel?.email}");
+    // logger.i("First Name :${AuthControllers.userModel?.firstName}");
+    // logger.i(" Last Name : ${AuthControllers.userModel?.lastName}");
+    // logger.i("Email ${AuthControllers.userModel?.email}");
 
     //----------------------Got to Profile screen -------------
     void onTapProfileButton() {

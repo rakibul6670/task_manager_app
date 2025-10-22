@@ -47,11 +47,24 @@ class Validator{
     if (value.length < 6) {
       return "Password must be at least 6 characters";
     }
-    if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$').hasMatch(value)) {
-      return "Password must contain letters and numbers";
+    if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$')
+        .hasMatch(value)) {
+      return "Password must contain letters, numbers, \n and special characters";
     }
     return null;
   }
+
+  //======================== Confirm Password validate================
+  static String? validateConfirmPassword(String? value, String password) {
+    if (value == null || value.isEmpty) {
+      return "Please confirm your password";
+    }
+    if (value != password) {
+      return "Passwords do not match";
+    }
+    return null;
+  }
+
 
 
 
