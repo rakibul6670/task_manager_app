@@ -3,7 +3,9 @@ import 'package:task_manager_app/routes/app_pages.dart';
 import 'package:task_manager_app/routes/app_routes.dart';
 
 class TaskManagerApp extends StatelessWidget {
-  const TaskManagerApp({super.key});
+  final bool isLoggedIn;
+
+  const TaskManagerApp({super.key, required this.isLoggedIn});
   
   /*
   It creates a static GlobalKey for your app’s Navigator.
@@ -55,9 +57,11 @@ class TaskManagerApp extends StatelessWidget {
           ),
         ),
       ),
-
+      title: 'Smart Task Manager',
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.initialRoute,
+      initialRoute: isLoggedIn
+          ? AppRoutes.dashboard
+          : AppRoutes.login,
       routes: AppPages.routes,
     );
   }

@@ -41,6 +41,8 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/splash/
+    - assets/screenshots/
 #--- Flutter app icon configure kora ---------
 flutter_launcher_icons:
   android: true
@@ -49,11 +51,17 @@ flutter_launcher_icons:
 
 #--- splash logo configure kora
 flutter_native_splash:
-  color: "#ffffff"
-  image: "assets/icons/app_icon.png"
-  #image_background:
   android: true
   ios: true
+ # color: "#ffffff"
+  background_image: "assets/splash/background.png"
+  image: "assets/icons/app_icon.png"
+  android_gravity: center
+  android_12:
+    image: "assets/icons/app_icon.png"
+    background_image: "assets/splash/background.png"
+    color: "#ffffff"
+
 
 
 

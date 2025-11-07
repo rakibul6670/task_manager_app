@@ -14,8 +14,8 @@ void main() async {
   AuthControllers.accessToken =
       sharedPreferences.getString(AuthControllers.accessTokenKey) ?? " ";
 
+  //----------login status check ------
+  final isLoggedIn = await AuthControllers.isUserLoggedIn();
 
-
-
-  runApp(TaskManagerApp());
+  runApp(TaskManagerApp(isLoggedIn:isLoggedIn));
 }
