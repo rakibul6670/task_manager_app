@@ -25,6 +25,7 @@ dependencies:
   shared_preferences: ^2.5.3
   flutter_launcher_icons: ^0.14.4
   rename: ^3.1.0
+  flutter_native_splash: ^2.4.7
 
 
 
@@ -40,10 +41,20 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+#--- Flutter app icon configure kora ---------
 flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/icons/app_icon.png"
+
+#--- splash logo configure kora
+flutter_native_splash:
+  color: "#ffffff"
+  image: "assets/icons/app_icon.png"
+  #image_background:
+  android: true
+  ios: true
+
 
 
 
