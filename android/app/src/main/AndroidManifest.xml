@@ -9,7 +9,7 @@
 
 
     <application
-        android:label="task_manager_app"
+        android:label="Smart Task Manager"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

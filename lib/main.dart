@@ -15,13 +15,7 @@ void main() async {
       sharedPreferences.getString(AuthControllers.accessTokenKey) ?? " ";
 
 
- //
- // try{
- //   await AuthControllers.getUserData();
- // }
- // catch(e){
- //   debugPrint("User data load failed");
- // }
+
 
   runApp(TaskManagerApp());
 }

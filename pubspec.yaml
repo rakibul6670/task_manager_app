@@ -23,6 +23,8 @@ dependencies:
   http: ^1.5.0
   #------------------this package for small data cache e store korte -------
   shared_preferences: ^2.5.3
+  flutter_launcher_icons: ^0.14.4
+  rename: ^3.1.0
 
 
 
@@ -37,5 +39,11 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/icons/
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+
 
 
