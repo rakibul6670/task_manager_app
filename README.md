@@ -56,7 +56,7 @@ Includes authentication with **Email, Password, OTP Verification**, and **Profil
 
 | Screen | Preview                                                |
 |---------|--------------------------------------------------------|
-| 🧾 Login | ![Login](aassets/screenshots/login.jpg)                |
+| 🧾 Login | ![Login](assets/screenshots/login.jpg)                |
 | 🆕 Signup | ![Signup](assets/screenshots/signup.jpg)               |
 | 🔑 Forgot Password | ![Forgot Password](assets/screenshots/reset_email.jpg) |
 | ✉️ OTP Verify | ![OTP](assets/screenshots/otp.jpg)                     |
